@@ -12,16 +12,8 @@ import com.bumptech.glide.Glide
  */
 @BindingAdapter("imageUrl")
 fun loadImage(imageView: ImageView, imageUrl: String) {
-    Glide.with(imageView.context)
+    Glide.with(imageView.context.applicationContext)
         .load(imageUrl)
         .error(R.mipmap.ic_launcher)
-        .placeholder(getCircularProgressDrawable(imageView.context))
         .into(imageView)
-}
-fun getCircularProgressDrawable(context: Context): CircularProgressDrawable {
-    val circularProgressDrawable = CircularProgressDrawable(context)
-    circularProgressDrawable.strokeWidth = context.resources.getDimension(R.dimen.dp_1)
-    circularProgressDrawable.centerRadius = context.resources.getDimension(R.dimen.dp_10)
-    circularProgressDrawable.start()
-    return circularProgressDrawable
 }

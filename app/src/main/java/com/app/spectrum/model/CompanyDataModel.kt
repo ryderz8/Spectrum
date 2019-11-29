@@ -4,9 +4,10 @@ package com.app.spectrum.model
  * Created by amresh on 29/11/2019
  */
 data class CompanyDataModel(
-    var companyName: String,
-    var companyDesc: String,
-    var companyURL: String,
-    var memberList: List<MemberDataModel>
-
+    var _id: String,
+    var company: String,
+    var about: String,
+    var website: String,
+    var logo: String,
+    var members: List<MemberDataModel>
 )

@@ -37,6 +37,8 @@ dependencies {
     implementation libraries.androidxArchLifecycle
     implementation libraries.legacySupportV4
     implementation libraries.glide
+    implementation "com.squareup.okhttp3:logging-interceptor:3.12.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.1.0"
 
 
     testImplementation 'junit:junit:4.12'

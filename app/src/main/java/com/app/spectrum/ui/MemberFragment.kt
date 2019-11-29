@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.spectrum.BR
 import com.app.spectrum.R
 import com.app.spectrum.adapter.CompanyListAdapter
-import com.app.spectrum.databinding.FragmentCompanyBinding
+import com.app.spectrum.databinding.FragmentMemberBinding
 import com.app.spectrum.model.CompanyDataModel
 import com.app.spectrum.remote.Injection
 import com.app.spectrum.viewmodel.CommonViewModel
@@ -23,15 +23,14 @@ import kotlinx.android.synthetic.main.fragment_company.*
 import kotlinx.android.synthetic.main.layout_error.*
 
 /**
- * Created by amresh on 28/11/2019
+ * Created by amresh on 30/11/2019
  */
-class CompanyFragment : Fragment() {
+class MemberFragment : Fragment(){
 
     private lateinit var viewModel: CommonViewModel
     private lateinit var companyListadapter: CompanyListAdapter
 
-    private lateinit var binding: FragmentCompanyBinding
-
+    private lateinit var binding: FragmentMemberBinding
 
     companion object {
         val TAG = CompanyFragment::class.java.simpleName
@@ -42,9 +41,9 @@ class CompanyFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return DataBindingUtil.inflate<FragmentCompanyBinding>(
+        return DataBindingUtil.inflate<FragmentMemberBinding>(
             inflater,
-            R.layout.fragment_company,
+            R.layout.fragment_member,
             container,
             false
         ).also {
@@ -62,7 +61,6 @@ class CompanyFragment : Fragment() {
         setHasOptionsMenu(true)
 
     }
-
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(
             activity!!,
@@ -95,32 +93,32 @@ class CompanyFragment : Fragment() {
 
     //observers
     private val renderCompanyData = Observer<List<CompanyDataModel>> {
-        Log.v(TAG, "data updated $it")
+        Log.v(CompanyFragment.TAG, "data updated $it")
         layoutError.visibility = View.GONE
         layoutEmpty.visibility = View.GONE
     }
 
     private val isViewLoadingObserver = Observer<Boolean> {
-        Log.v(TAG, "isViewLoading $it")
+        Log.v(CompanyFragment.TAG, "isViewLoading $it")
         val visibility = if (it) View.VISIBLE else View.GONE
         progressBar.visibility = visibility
     }
 
     private val onMessageErrorObserver = Observer<Any> {
-        Log.v(TAG, "onMessageError $it")
+        Log.v(CompanyFragment.TAG, "onMessageError $it")
         layoutError.visibility = View.VISIBLE
         layoutEmpty.visibility = View.GONE
         textViewError.text = "Error $it"
     }
 
     private val emptyListObserver = Observer<Boolean> {
-        Log.v(TAG, "emptyListObserver $it")
+        Log.v(CompanyFragment.TAG, "emptyListObserver $it")
         layoutEmpty.visibility = View.VISIBLE
         layoutError.visibility = View.GONE
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadCompanyData()
+        viewModel.loadMemberData()
     }
 }
