@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data></data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
+
+        <ImageView
+            android:id="@+id/image_view_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="5dp"
+            android:scaleType="centerInside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/company_name_tv"
+            style="@style/Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:text=""
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/image_view_avatar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.48000002"
+            tools:text="Ribbed Socks" />
+
+        <TextView
+            android:id="@+id/company_des_tv"
+            style="@style/SubTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="2dp"
+            android:text=""
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/image_view_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/company_name_tv"
+            app:layout_constraintVertical_bias="0.029999971"
+            tools:text="sfnsknfksnfksf ksnajfn ksnfksafba ksbfkbkasbf kbsaddd ddddddddddf sss sss ssss" />
+
+        <TextView
+            android:id="@+id/company_url_tv"
+            style="@style/SubTitleURL"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="10dp"
+            android:text=""
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/image_view_avatar"
+            app:layout_constraintTop_toBottomOf="@+id/company_des_tv"
+            app:layout_constraintVertical_bias="0.04000002"
+            tools:text="abc@xyz.com" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
