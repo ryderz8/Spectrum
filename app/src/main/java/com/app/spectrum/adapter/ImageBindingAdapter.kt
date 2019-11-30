@@ -1,9 +1,7 @@
 package com.app.spectrum.adapter
 
-import android.content.Context
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.app.spectrum.R
 import com.bumptech.glide.Glide
 

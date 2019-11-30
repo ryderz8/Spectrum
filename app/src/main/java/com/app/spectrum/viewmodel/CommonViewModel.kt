@@ -7,7 +7,6 @@ import com.app.spectrum.model.CompanyDataModel
 import com.app.spectrum.model.MemberDataModel
 import com.app.spectrum.remote.OperationCallback
 import com.app.spectrum.remote.RemoteDataSource
-import java.text.FieldPosition
 
 /**
  * Created by amresh on 29/11/2019
@@ -50,16 +49,17 @@ class CommonViewModel(private val repository: RemoteDataSource) : ViewModel(){
         })
     }
 
-    fun loadMemberData(position: Int){
-        companyData.value?.let {
+    fun loadMemberData(companyDataModel: CompanyDataModel){
+        _isViewLoading.postValue(true)
+        companyDataModel.members.let {
             if(it.isNotEmpty()){
-                memberData.value = it[position].members
+                _isViewLoading.postValue(false)
+                memberData.value = it
+            }else{
+                _isEmptyList.postValue(true)
             }
+
         }
-
-
     }
-
-
 
 }

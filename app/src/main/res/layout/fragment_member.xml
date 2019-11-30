@@ -15,13 +15,13 @@
         android:fitsSystemWindows="true">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/company_list"
+            android:id="@+id/member_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="1dp"
             android:layout_marginBottom="5dp"
             android:nestedScrollingEnabled="false"
-            app:itemData="@{viewModel.companyData}"
+            app:itemData="@{viewModel.memberData}"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -41,7 +41,7 @@
             android:layout_marginBottom="8dp"
             android:indeterminate="true"
             android:visibility="gone"
-            app:layout_anchor="@+id/company_list"
+            app:layout_anchor="@+id/member_list"
             app:layout_anchorGravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -25,7 +25,7 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun loadFragment(fragment: Fragment, tag : String){
+     fun loadFragment(fragment: Fragment, tag : String){
        supportFragmentManager.beginTransaction()
            .replace(R.id.container,fragment,tag)
            .addToBackStack(tag)

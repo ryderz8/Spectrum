@@ -9,12 +9,13 @@ import com.app.spectrum.BR
 import com.app.spectrum.R
 import com.app.spectrum.databinding.CompanyListItemBinding
 import com.app.spectrum.interfaces.BindableAdapter
+import com.app.spectrum.interfaces.onItemClick
 import com.app.spectrum.model.CompanyDataModel
 
 /**
  * Created by amresh on 29/11/2019
  */
-class CompanyListAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+class CompanyListAdapter(val mOnItemClick: onItemClick) : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
     BindableAdapter<List<CompanyDataModel>> {
 
     var companyList = emptyList<CompanyDataModel>()
@@ -50,6 +51,13 @@ class CompanyListAdapter(val mContext: Context) : RecyclerView.Adapter<RecyclerV
         fun BindItem(companyItem: CompanyDataModel) {
             companyListItemBinding.setVariable(BR.dataModel, companyItem)
             companyListItemBinding.executePendingBindings()
+
+            companyListItemBinding.root.setOnClickListener{
+                mOnItemClick.onClick(companyItem)
+            }
+
+
+
         }
 
 

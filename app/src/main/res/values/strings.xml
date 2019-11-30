@@ -2,4 +2,5 @@
     <string name="app_name">Spectrum</string>
     <string name="empty_list">No Data available</string>
     <string name="an_error_occurred">Server error. Please retry!</string>
+    <string name="space">\u0020</string>
 </resources>

@@ -15,6 +15,7 @@ import com.app.spectrum.BR
 import com.app.spectrum.R
 import com.app.spectrum.adapter.CompanyListAdapter
 import com.app.spectrum.databinding.FragmentCompanyBinding
+import com.app.spectrum.interfaces.onItemClick
 import com.app.spectrum.model.CompanyDataModel
 import com.app.spectrum.remote.Injection
 import com.app.spectrum.viewmodel.CommonViewModel
@@ -81,7 +82,7 @@ class CompanyFragment : Fragment() {
     private fun setupRecyclerView() {
         activity?.let {
             company_list.layoutManager = LinearLayoutManager(this.context)
-            companyListadapter = CompanyListAdapter(it)
+            companyListadapter = CompanyListAdapter(onItemClick)
             company_list.setHasFixedSize(true)
             company_list.adapter = companyListadapter
             company_list.addItemDecoration(
@@ -90,6 +91,16 @@ class CompanyFragment : Fragment() {
                     DividerItemDecoration.VERTICAL
                 )
             )
+        }
+    }
+
+    private var onItemClick = object : onItemClick {
+        override fun onClick(companyDataModel: CompanyDataModel) {
+            activity?.let {
+                val fragment = MemberFragment()
+                (it as HomeActivity).loadFragment(fragment, MemberFragment.TAG)
+            }
+            viewModel.loadMemberData(companyDataModel)
         }
     }
 

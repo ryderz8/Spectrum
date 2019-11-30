@@ -7,7 +7,8 @@ data class MemberDataModel(
     var _id: String,
     var name: Name,
     var age: Int,
-    var email: String
+    var email: String,
+    var phone: String
 )
 
 data class Name(

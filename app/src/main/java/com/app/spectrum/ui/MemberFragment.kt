@@ -13,13 +13,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.spectrum.BR
 import com.app.spectrum.R
-import com.app.spectrum.adapter.CompanyListAdapter
+import com.app.spectrum.adapter.MemberListAdapter
 import com.app.spectrum.databinding.FragmentMemberBinding
 import com.app.spectrum.model.CompanyDataModel
+import com.app.spectrum.model.MemberDataModel
 import com.app.spectrum.remote.Injection
 import com.app.spectrum.viewmodel.CommonViewModel
 import com.app.spectrum.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_company.*
+import kotlinx.android.synthetic.main.fragment_company.layoutEmpty
+import kotlinx.android.synthetic.main.fragment_company.layoutError
+import kotlinx.android.synthetic.main.fragment_company.progressBar
+import kotlinx.android.synthetic.main.fragment_member.*
 import kotlinx.android.synthetic.main.layout_error.*
 
 /**
@@ -28,12 +33,12 @@ import kotlinx.android.synthetic.main.layout_error.*
 class MemberFragment : Fragment(){
 
     private lateinit var viewModel: CommonViewModel
-    private lateinit var companyListadapter: CompanyListAdapter
+    private lateinit var memberListadapter: MemberListAdapter
 
     private lateinit var binding: FragmentMemberBinding
 
     companion object {
-        val TAG = CompanyFragment::class.java.simpleName
+        val TAG = MemberFragment::class.java.simpleName
     }
 
     override fun onCreateView(
@@ -68,7 +73,7 @@ class MemberFragment : Fragment(){
         ).get(CommonViewModel::class.java)
 
         binding.setVariable(BR.viewModel, viewModel)
-        viewModel.companyData.observe(this, renderCompanyData)
+        viewModel.memberData.observe(this, renderMemberData)
 
         viewModel.isViewLoading.observe(this, isViewLoadingObserver)
         viewModel.onMessageError.observe(this, onMessageErrorObserver)
@@ -78,11 +83,11 @@ class MemberFragment : Fragment(){
 
     private fun setupRecyclerView() {
         activity?.let {
-            company_list.layoutManager = LinearLayoutManager(this.context)
-            companyListadapter = CompanyListAdapter(it)
-            company_list.setHasFixedSize(true)
-            company_list.adapter = companyListadapter
-            company_list.addItemDecoration(
+            member_list.layoutManager = LinearLayoutManager(this.context)
+            memberListadapter = MemberListAdapter()
+            member_list.setHasFixedSize(true)
+            member_list.adapter = memberListadapter
+            member_list.addItemDecoration(
                 DividerItemDecoration(
                     it,
                     DividerItemDecoration.VERTICAL
@@ -92,8 +97,8 @@ class MemberFragment : Fragment(){
     }
 
     //observers
-    private val renderCompanyData = Observer<List<CompanyDataModel>> {
-        Log.v(CompanyFragment.TAG, "data updated $it")
+    private val renderMemberData = Observer<List<MemberDataModel>> {
+        Log.v(TAG, "data updated $it")
         layoutError.visibility = View.GONE
         layoutEmpty.visibility = View.GONE
     }
@@ -117,8 +122,4 @@ class MemberFragment : Fragment(){
         layoutError.visibility = View.GONE
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.loadMemberData()
-    }
 }

@@ -1,6 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
 
-</LinearLayout>
+        <variable
+            name="dataModel"
+            type="com.app.spectrum.model.MemberDataModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/name_tv"
+            style="@style/Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:padding="2dp"
+            android:text="@{dataModel.name.first.concat(@string/space).concat(dataModel.name.last)}"
+            tools:text="Amresh Singh" />
+
+        <TextView
+            android:id="@+id/age_tv"
+            style="@style/SubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:padding="2dp"
+            android:text="@{String.valueOf(dataModel.age)}"
+            tools:text="28" />
+
+        <TextView
+            android:id="@+id/email_tv"
+            style="@style/SubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:padding="2dp"
+            android:text="@{dataModel.email}"
+            tools:text="abc@xyz.com" />
+
+        <TextView
+            android:id="@+id/phone_tv"
+            style="@style/SubTitleURL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:padding="2dp"
+            android:text="@{dataModel.phone}"
+            tools:text="9654649664" />
+
+    </LinearLayout>
+</layout>
