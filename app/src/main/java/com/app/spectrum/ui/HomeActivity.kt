@@ -78,6 +78,8 @@ class HomeActivity : AppCompatActivity() {
                 setDisableBackBtn()
                 setToolbarTitle("Companies")
                 super.onBackPressed()
+            }else{
+                finish()
             }
         } else {
             super.onBackPressed()

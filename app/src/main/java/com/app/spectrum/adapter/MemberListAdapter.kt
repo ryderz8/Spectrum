@@ -97,7 +97,7 @@ class MemberListAdapter(val mOnItemClick: OnMemberClick) : RecyclerView.Adapter<
         var results = emptyList<MemberDataModel>().toMutableList()
 
         for (item in memberList) {
-            if (item.name.first.toLowerCase().contains(constraint)) {
+            if (item.name.first.toLowerCase().contains(constraint) || item.name.last.toLowerCase().contains(constraint)) {
                 results.add(item)
             }
         }

@@ -1,9 +1,14 @@
 package com.app.spectrum.ui
 
+import android.app.Dialog
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.view.View.OnClickListener
+import android.widget.Button
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -28,17 +33,16 @@ import kotlinx.android.synthetic.main.fragment_company.progressBar
 import kotlinx.android.synthetic.main.fragment_member.*
 import kotlinx.android.synthetic.main.layout_error.*
 
+
 /**
  * Created by amresh on 30/11/2019
  */
-class MemberFragment : Fragment(){
+class MemberFragment : Fragment() {
 
     private lateinit var viewModel: CommonViewModel
     private lateinit var memberListadapter: MemberListAdapter
 
     private lateinit var binding: FragmentMemberBinding
-
-    var sortedInAscendingOrder = false
 
     companion object {
         val TAG = MemberFragment::class.java.simpleName
@@ -69,6 +73,7 @@ class MemberFragment : Fragment(){
         setHasOptionsMenu(true)
 
     }
+
     private fun setUpViewModel() {
         viewModel = ViewModelProviders.of(
             activity!!,
@@ -108,22 +113,22 @@ class MemberFragment : Fragment(){
         override fun onMemberClick(memberDataModel: MemberDataModel, clickType: ClickEnum) {
             when (clickType.title) {
                 ClickEnum.FOLLOW_CLICK.title -> {
-                   if(!memberDataModel.followed) {
-                       Toast.makeText(activity, "Followed", Toast.LENGTH_SHORT).show()
-                       memberDataModel.followed = true
-                       memberListadapter.notifyDataSetChanged()
-                   }else {
-                       Toast.makeText(activity, "UnFollowed", Toast.LENGTH_SHORT).show()
-                       memberDataModel.followed = false
-                       memberListadapter.notifyDataSetChanged()
-                   }
+                    if (!memberDataModel.followed) {
+                        Toast.makeText(activity, "Followed", Toast.LENGTH_SHORT).show()
+                        memberDataModel.followed = true
+                        memberListadapter.notifyDataSetChanged()
+                    } else {
+                        Toast.makeText(activity, "UnFollowed", Toast.LENGTH_SHORT).show()
+                        memberDataModel.followed = false
+                        memberListadapter.notifyDataSetChanged()
+                    }
                 }
                 ClickEnum.FAV_CLICK.title -> {
-                    if(!memberDataModel.fav) {
+                    if (!memberDataModel.fav) {
                         Toast.makeText(activity, "Added to favorites", Toast.LENGTH_SHORT).show()
                         memberDataModel.fav = true
                         memberListadapter.notifyDataSetChanged()
-                    }else {
+                    } else {
                         Toast.makeText(activity, "Removed from favorites", Toast.LENGTH_SHORT)
                             .show()
                         memberDataModel.fav = false
@@ -186,20 +191,92 @@ class MemberFragment : Fragment(){
     }
 
     private var onFabButtonClicked: View.OnClickListener = View.OnClickListener {
+        showAlert()
+//        if (!memberListadapter.filteredMemberList.isNullOrEmpty()) {
+//            if (sortedInAscendingOrder) {
+//                sortedInAscendingOrder = false
+//                memberListadapter.filteredMemberList =
+//                    memberListadapter.filteredMemberList.toMutableList().asReversed()
+//                memberListadapter.notifyDataSetChanged()
+//            } else {
+//                sortedInAscendingOrder = true
+//                memberListadapter.filteredMemberList =
+//                    memberListadapter.filteredMemberList.toMutableList()
+//                        .sortedWith(compareBy { it.name.first })
+//                memberListadapter.notifyDataSetChanged()
+//            }
+//        }
+    }
+
+    private fun showAlert() {
+
+        val dialog = Dialog(activity!!)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.custom_dialog)
+
+        val submitBtn = dialog.findViewById(R.id.submit_btn) as Button
+        val cancelBtn = dialog.findViewById(R.id.cancel_btn) as Button
+        val nameAgeRadioGroup = dialog.findViewById(R.id.name_age_rg) as RadioGroup
+        val sortInRadioGroup = dialog.findViewById(R.id.sort_in_rg) as RadioGroup
+
+
+        submitBtn.setOnClickListener {
+            val selectedNameId = nameAgeRadioGroup.checkedRadioButtonId
+            val selectedOrderId = sortInRadioGroup.checkedRadioButtonId
+
+            if (selectedNameId == -1 || selectedOrderId == -1) {
+                Toast.makeText(
+                    activity,
+                    "Please select both Type and Order for sorting!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val nameRadioBtn = dialog.findViewById(selectedNameId) as RadioButton
+            val orderradioBtn = dialog.findViewById(selectedOrderId) as RadioButton
+
+            sortMemberList(nameRadioBtn.text.toString(), orderradioBtn.text.toString())
+
+            dialog.dismiss()
+        }
+        cancelBtn.setOnClickListener { dialog.dismiss() }
+
+        val metrics: DisplayMetrics = resources.displayMetrics
+        val width = metrics.widthPixels
+        val height = metrics.heightPixels
+
+        dialog.window?.setLayout((6 * width) / 7, (4 * height) / 8)
+        dialog.show()
+
+    }
+
+    private fun sortMemberList(type: String, order: String) {
+
         if (!memberListadapter.filteredMemberList.isNullOrEmpty()) {
-            if (sortedInAscendingOrder) {
-                sortedInAscendingOrder = false
-                memberListadapter.filteredMemberList =
-                    memberListadapter.filteredMemberList.toMutableList().asReversed()
-                memberListadapter.notifyDataSetChanged()
-            } else {
-                sortedInAscendingOrder = true
+            if (type == "Name" && order == "Ascending") {
                 memberListadapter.filteredMemberList =
                     memberListadapter.filteredMemberList.toMutableList()
                         .sortedWith(compareBy { it.name.first })
                 memberListadapter.notifyDataSetChanged()
+            } else if (type =="Name" && order == "Descending") {
+                memberListadapter.filteredMemberList =
+                    memberListadapter.filteredMemberList.toMutableList()
+                        .sortedWith(compareByDescending { it.name.first })
+                memberListadapter.notifyDataSetChanged()
+            }else if(type == "Age" && order == "Ascending"){
+                memberListadapter.filteredMemberList =
+                    memberListadapter.filteredMemberList.toMutableList()
+                        .sortedWith(compareBy { it.age })
+                memberListadapter.notifyDataSetChanged()
+            }else {
+                memberListadapter.filteredMemberList =
+                    memberListadapter.filteredMemberList.toMutableList()
+                        .sortedWith(compareByDescending { it.age })
+                memberListadapter.notifyDataSetChanged()
             }
         }
     }
-
 }
+
