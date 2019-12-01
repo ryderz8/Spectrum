@@ -2,9 +2,10 @@ package com.app.spectrum.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.View.OnClickListener
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -15,12 +16,12 @@ import com.app.spectrum.BR
 import com.app.spectrum.R
 import com.app.spectrum.adapter.MemberListAdapter
 import com.app.spectrum.databinding.FragmentMemberBinding
-import com.app.spectrum.model.CompanyDataModel
+import com.app.spectrum.interfaces.OnMemberClick
+import com.app.spectrum.model.ClickEnum
 import com.app.spectrum.model.MemberDataModel
 import com.app.spectrum.remote.Injection
 import com.app.spectrum.viewmodel.CommonViewModel
 import com.app.spectrum.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.fragment_company.*
 import kotlinx.android.synthetic.main.fragment_company.layoutEmpty
 import kotlinx.android.synthetic.main.fragment_company.layoutError
 import kotlinx.android.synthetic.main.fragment_company.progressBar
@@ -36,6 +37,8 @@ class MemberFragment : Fragment(){
     private lateinit var memberListadapter: MemberListAdapter
 
     private lateinit var binding: FragmentMemberBinding
+
+    var sortedInAscendingOrder = false
 
     companion object {
         val TAG = MemberFragment::class.java.simpleName
@@ -83,8 +86,11 @@ class MemberFragment : Fragment(){
 
     private fun setupRecyclerView() {
         activity?.let {
+
+            (it as HomeActivity).setBackToolbar(OnClickListener { activity!!.onBackPressed() })
+
             member_list.layoutManager = LinearLayoutManager(this.context)
-            memberListadapter = MemberListAdapter()
+            memberListadapter = MemberListAdapter(onMemberItemClick)
             member_list.setHasFixedSize(true)
             member_list.adapter = memberListadapter
             member_list.addItemDecoration(
@@ -93,7 +99,51 @@ class MemberFragment : Fragment(){
                     DividerItemDecoration.VERTICAL
                 )
             )
+
         }
+        sort.setOnClickListener(onFabButtonClicked)
+    }
+
+    private var onMemberItemClick = object : OnMemberClick {
+        override fun onMemberClick(memberDataModel: MemberDataModel, clickType: ClickEnum) {
+            when (clickType.title) {
+                ClickEnum.FOLLOW_CLICK.title -> {
+                   if(!memberDataModel.followed) {
+                       Toast.makeText(activity, "Followed", Toast.LENGTH_SHORT).show()
+                       memberDataModel.followed = true
+                       memberListadapter.notifyDataSetChanged()
+                   }else {
+                       Toast.makeText(activity, "UnFollowed", Toast.LENGTH_SHORT).show()
+                       memberDataModel.followed = false
+                       memberListadapter.notifyDataSetChanged()
+                   }
+                }
+                ClickEnum.FAV_CLICK.title -> {
+                    if(!memberDataModel.fav) {
+                        Toast.makeText(activity, "Added to favorites", Toast.LENGTH_SHORT).show()
+                        memberDataModel.fav = true
+                        memberListadapter.notifyDataSetChanged()
+                    }else {
+                        Toast.makeText(activity, "Removed from favorites", Toast.LENGTH_SHORT)
+                            .show()
+                        memberDataModel.fav = false
+                        memberListadapter.notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater
+    ) {
+        menu.clear()
+        inflater.inflate(R.menu.search_view_menu, menu)
+        val search: MenuItem = menu.findItem(R.id.search)
+        val searchView: SearchView = search.actionView as SearchView
+        search(searchView)
+        super.onCreateOptionsMenu(menu, inflater)
     }
 
     //observers
@@ -120,6 +170,36 @@ class MemberFragment : Fragment(){
         Log.v(CompanyFragment.TAG, "emptyListObserver $it")
         layoutEmpty.visibility = View.VISIBLE
         layoutError.visibility = View.GONE
+    }
+
+    private fun search(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                memberListadapter.filter.filter(newText)
+                return true
+            }
+        })
+    }
+
+    private var onFabButtonClicked: View.OnClickListener = View.OnClickListener {
+        if (!memberListadapter.filteredMemberList.isNullOrEmpty()) {
+            if (sortedInAscendingOrder) {
+                sortedInAscendingOrder = false
+                memberListadapter.filteredMemberList =
+                    memberListadapter.filteredMemberList.toMutableList().asReversed()
+                memberListadapter.notifyDataSetChanged()
+            } else {
+                sortedInAscendingOrder = true
+                memberListadapter.filteredMemberList =
+                    memberListadapter.filteredMemberList.toMutableList()
+                        .sortedWith(compareBy { it.name.first })
+                memberListadapter.notifyDataSetChanged()
+            }
+        }
     }
 
 }

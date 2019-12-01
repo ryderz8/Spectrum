@@ -8,8 +8,14 @@ data class MemberDataModel(
     var name: Name,
     var age: Int,
     var email: String,
-    var phone: String
-)
+    var phone: String,
+    var followed: Boolean = false,
+    var fav: Boolean = false
+){
+    fun setFollowedText():String{
+        return  if (followed) "Followed" else "Follow"
+    }
+}
 
 data class Name(
     var first: String,

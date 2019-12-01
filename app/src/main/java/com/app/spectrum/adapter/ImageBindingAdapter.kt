@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 fun loadImage(imageView: ImageView, imageUrl: String) {
     Glide.with(imageView.context.applicationContext)
         .load(imageUrl)
-        .error(R.mipmap.ic_launcher)
+        .error(R.drawable.ic_launcher_foreground)
+        .placeholder(R.drawable.ic_launcher_foreground)
         .into(imageView)
 }

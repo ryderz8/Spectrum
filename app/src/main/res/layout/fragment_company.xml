@@ -69,6 +69,17 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/sort"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/dp_20"
+            android:backgroundTint="@color/colorPrimaryDark" />
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

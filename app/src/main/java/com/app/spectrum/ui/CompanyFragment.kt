@@ -2,9 +2,9 @@ package com.app.spectrum.ui
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,6 +16,7 @@ import com.app.spectrum.R
 import com.app.spectrum.adapter.CompanyListAdapter
 import com.app.spectrum.databinding.FragmentCompanyBinding
 import com.app.spectrum.interfaces.onItemClick
+import com.app.spectrum.model.ClickEnum
 import com.app.spectrum.model.CompanyDataModel
 import com.app.spectrum.remote.Injection
 import com.app.spectrum.viewmodel.CommonViewModel
@@ -30,12 +31,19 @@ class CompanyFragment : Fragment() {
 
     private lateinit var viewModel: CommonViewModel
     private lateinit var companyListadapter: CompanyListAdapter
+    private var isStartedFromBackstack = true
 
     private lateinit var binding: FragmentCompanyBinding
 
+    var sortedInAscendingOrder = false
 
     companion object {
         val TAG = CompanyFragment::class.java.simpleName
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isStartedFromBackstack = false
     }
 
     override fun onCreateView(
@@ -58,9 +66,10 @@ class CompanyFragment : Fragment() {
 
         setUpViewModel()
 
-        setupRecyclerView()
+        setupUI()
 
         setHasOptionsMenu(true)
+
 
     }
 
@@ -79,7 +88,7 @@ class CompanyFragment : Fragment() {
         binding.lifecycleOwner = this
     }
 
-    private fun setupRecyclerView() {
+    private fun setupUI() {
         activity?.let {
             company_list.layoutManager = LinearLayoutManager(this.context)
             companyListadapter = CompanyListAdapter(onItemClick)
@@ -92,15 +101,46 @@ class CompanyFragment : Fragment() {
                 )
             )
         }
+
+        sort.setOnClickListener(onFabButtonClicked)
     }
 
     private var onItemClick = object : onItemClick {
-        override fun onClick(companyDataModel: CompanyDataModel) {
-            activity?.let {
-                val fragment = MemberFragment()
-                (it as HomeActivity).loadFragment(fragment, MemberFragment.TAG)
+        override fun onClick(companyDataModel: CompanyDataModel, clickType: ClickEnum) {
+            when (clickType.title) {
+                ClickEnum.NORMAL_CLICK.title -> {
+                    activity?.let {
+                        val fragment = MemberFragment()
+                        (it as HomeActivity).loadFragment(fragment, MemberFragment.TAG)
+                        it.setToolbarTitle("Members")
+                    }
+                    viewModel.loadMemberData(companyDataModel)
+                }
+                ClickEnum.FOLLOW_CLICK.title -> {
+                    if(!companyDataModel.followed) {
+                        Toast.makeText(getActivity(), "Followed", Toast.LENGTH_SHORT).show()
+                        companyDataModel.followed = true
+                        companyListadapter.notifyDataSetChanged()
+                    }else{
+                        Toast.makeText(getActivity(), "UnFollowed", Toast.LENGTH_SHORT).show()
+                        companyDataModel.followed = false
+                        companyListadapter.notifyDataSetChanged()
+                    }
+
+                }
+                ClickEnum.FAV_CLICK.title -> {
+                    if(!companyDataModel.fav) {
+                        Toast.makeText(activity, "Added to favorites", Toast.LENGTH_SHORT).show()
+                        companyDataModel.fav = true
+                        companyListadapter.notifyDataSetChanged()
+                    }else {
+                        Toast.makeText(activity, "Removed from favorites", Toast.LENGTH_SHORT)
+                            .show()
+                        companyDataModel.fav = false
+                        companyListadapter.notifyDataSetChanged()
+                    }
+                }
             }
-            viewModel.loadMemberData(companyDataModel)
         }
     }
 
@@ -132,6 +172,55 @@ class CompanyFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadCompanyData()
+        if (!isStartedFromBackstack)
+            viewModel.loadCompanyData()
+    }
+
+
+    override fun onCreateOptionsMenu(
+        menu: Menu,
+        inflater: MenuInflater
+    ) {
+        menu.clear()
+        inflater.inflate(R.menu.search_view_menu, menu)
+        val search: MenuItem = menu.findItem(R.id.search)
+        val searchView: SearchView = search.actionView as SearchView
+        search(searchView)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun search(searchView: SearchView) {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                companyListadapter.filter.filter(newText)
+                return true
+            }
+        })
+    }
+
+    private var onFabButtonClicked: View.OnClickListener = View.OnClickListener {
+        if (!companyListadapter.companyFilteredList.isNullOrEmpty()) {
+            if (sortedInAscendingOrder) {
+                sortedInAscendingOrder = false
+                companyListadapter.companyFilteredList =
+                    companyListadapter.companyFilteredList.toMutableList().asReversed()
+                companyListadapter.notifyDataSetChanged()
+            } else {
+                sortedInAscendingOrder = true
+                companyListadapter.companyFilteredList =
+                    companyListadapter.companyFilteredList.toMutableList()
+                        .sortedWith(compareBy { it.company })
+                companyListadapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        isStartedFromBackstack = true
     }
 }

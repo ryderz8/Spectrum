@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="dataModel"
-            type="com.app.spectrum.model.CompanyDataModel"
-            />
+            type="com.app.spectrum.model.CompanyDataModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
+        android:paddingTop="10dp"
         android:paddingBottom="5dp">
 
         <ImageView
@@ -40,8 +40,29 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toRightOf="@+id/image_view_avatar"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.48000002"
             tools:text="Ribbed Socks" />
+
+        <ImageView
+            android:id="@+id/fav_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@{dataModel.fav ? @drawable/fav_24_1 : @drawable/fav_24}"
+            android:layout_marginEnd="@dimen/dp_10"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/follow_btn"/>
+
+        <TextView
+            android:id="@+id/follow_btn"
+            style="@style/follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@{dataModel.followed ? null : @drawable/oval_shape}"
+            android:gravity="center"
+            android:text="@{dataModel.setFollowedText()}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SmallSp" />
+
 
         <TextView
             android:id="@+id/company_des_tv"
@@ -57,7 +78,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/image_view_avatar"
-            app:layout_constraintTop_toBottomOf="@+id/company_name_tv"
+            app:layout_constraintTop_toBottomOf="@+id/follow_btn"
             app:layout_constraintVertical_bias="0.029999971"
             tools:text="sfnsknfksnfksf ksnajfn ksnfksafba ksbfkbkasbf kbsaddd ddddddddddf sss sss ssss" />
 
@@ -74,6 +95,7 @@
             app:layout_constraintTop_toBottomOf="@+id/company_des_tv"
             app:layout_constraintVertical_bias="0.04000002"
             tools:text="abc@xyz.com" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

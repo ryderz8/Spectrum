@@ -9,5 +9,12 @@ data class CompanyDataModel(
     var about: String,
     var website: String,
     var logo: String,
-    var members: List<MemberDataModel>
-)
+    var members: List<MemberDataModel>,
+    var followed: Boolean,
+    var fav: Boolean
+){
+    fun setFollowedText():String{
+        return  if (followed) "Followed" else "Follow"
+    }
+
+}

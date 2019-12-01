@@ -12,25 +12,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
+        android:layout_marginStart="5dp"
         android:orientation="vertical">
-
+     <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/dp_5"
+         android:orientation="horizontal">
         <TextView
             android:id="@+id/name_tv"
             style="@style/Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:padding="2dp"
             android:text="@{dataModel.name.first.concat(@string/space).concat(dataModel.name.last)}"
             tools:text="Amresh Singh" />
+
+         <ImageView
+             android:id="@+id/fav_iv"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:src="@{dataModel.fav ? @drawable/fav_24_1 : @drawable/fav_24}"
+             android:layout_marginEnd="@dimen/dp_10"
+             android:layout_toStartOf="@+id/follow_btn"/>
+
+        <TextView
+            android:id="@+id/follow_btn"
+            style="@style/follow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@{dataModel.followed ? null : @drawable/oval_shape}"
+            android:text="@{dataModel.setFollowedText()}"
+            tools:ignore="SmallSp" />
+         </RelativeLayout>
 
         <TextView
             android:id="@+id/age_tv"
             style="@style/SubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:padding="2dp"
+            android:layout_margin="1dp"
             android:text="@{String.valueOf(dataModel.age)}"
             tools:text="28" />
 
@@ -39,8 +60,7 @@
             style="@style/SubTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:padding="2dp"
+            android:layout_margin="1dp"
             android:text="@{dataModel.email}"
             tools:text="abc@xyz.com" />
 
@@ -49,8 +69,7 @@
             style="@style/SubTitleURL"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:padding="2dp"
+            android:layout_margin="1dp"
             android:text="@{dataModel.phone}"
             tools:text="9654649664" />
 
