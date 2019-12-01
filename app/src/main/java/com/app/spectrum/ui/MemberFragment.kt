@@ -192,20 +192,6 @@ class MemberFragment : Fragment() {
 
     private var onFabButtonClicked: View.OnClickListener = View.OnClickListener {
         showAlert()
-//        if (!memberListadapter.filteredMemberList.isNullOrEmpty()) {
-//            if (sortedInAscendingOrder) {
-//                sortedInAscendingOrder = false
-//                memberListadapter.filteredMemberList =
-//                    memberListadapter.filteredMemberList.toMutableList().asReversed()
-//                memberListadapter.notifyDataSetChanged()
-//            } else {
-//                sortedInAscendingOrder = true
-//                memberListadapter.filteredMemberList =
-//                    memberListadapter.filteredMemberList.toMutableList()
-//                        .sortedWith(compareBy { it.name.first })
-//                memberListadapter.notifyDataSetChanged()
-//            }
-//        }
     }
 
     private fun showAlert() {

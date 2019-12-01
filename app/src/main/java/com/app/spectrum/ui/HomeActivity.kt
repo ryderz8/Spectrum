@@ -60,7 +60,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    fun setDisableBackBtn() {
+    private fun setDisableBackBtn() {
         toolbar.navigationIcon = null
     }
 

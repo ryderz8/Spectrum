@@ -1,6 +1,5 @@
 package com.app.spectrum.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.spectrum.model.CompanyDataModel
@@ -11,52 +10,49 @@ import com.app.spectrum.remote.RemoteDataSource
 /**
  * Created by amresh on 29/11/2019
  */
-class CommonViewModel(private val repository: RemoteDataSource) : ViewModel(){
+class CommonViewModel(private val repository: RemoteDataSource) : ViewModel() {
 
-    //private val _companyData = MutableLiveData<List<CompanyDataModel>>().apply { value = emptyList() }
-   // val companyData: LiveData<List<CompanyDataModel>> = _companyData
-    val companyData :MutableLiveData<List<CompanyDataModel>> = MutableLiveData()
-    val memberData : MutableLiveData<List<MemberDataModel>> = MutableLiveData()
+    val companyData: MutableLiveData<List<CompanyDataModel>> = MutableLiveData()
 
-    private val _isViewLoading= MutableLiveData<Boolean>()
-    val isViewLoading: LiveData<Boolean> = _isViewLoading
+    val memberData: MutableLiveData<List<MemberDataModel>> = MutableLiveData()
 
-    private val _onMessageError= MutableLiveData<Any>()
-    val onMessageError: LiveData<Any> = _onMessageError
+    val isViewLoading: MutableLiveData<Boolean> = MutableLiveData()
 
-    private val _isEmptyList= MutableLiveData<Boolean>()
-    val isEmptyList: LiveData<Boolean> = _isEmptyList
+    val onMessageError: MutableLiveData<Any> = MutableLiveData()
 
-    fun loadCompanyData(){
-        _isViewLoading.postValue(true)
-        repository.retrieveMuseums(object: OperationCallback {
+    val isEmptyList: MutableLiveData<Boolean> = MutableLiveData()
+
+
+    fun loadCompanyData() {
+        isViewLoading.postValue(true)
+        repository.retrieveMuseums(object : OperationCallback {
             override fun onError(obj: Any?) {
-                _isViewLoading.postValue(false)
-                _onMessageError.postValue( obj)
+                isViewLoading.postValue(false)
+                onMessageError.postValue(obj)
             }
 
             override fun onSuccess(obj: Any?) {
-                _isViewLoading.postValue(false)
+                isViewLoading.postValue(false)
 
-                if(obj!=null && obj is List<*>){
-                    if(obj.isEmpty()){
-                        _isEmptyList.postValue(true)
-                    }else{
-                        companyData.value= obj as List<CompanyDataModel>
+                if (obj != null && obj is List<*>) {
+                    if (obj.isEmpty()) {
+                        isEmptyList.postValue(true)
+                    } else {
+                        companyData.value = obj as List<CompanyDataModel>
                     }
                 }
             }
         })
     }
 
-    fun loadMemberData(companyDataModel: CompanyDataModel){
-        _isViewLoading.postValue(true)
+    fun loadMemberData(companyDataModel: CompanyDataModel) {
+        isViewLoading.postValue(true)
         companyDataModel.members.let {
-            if(it.isNotEmpty()){
-                _isViewLoading.postValue(false)
+            if (it.isNotEmpty()) {
+                isViewLoading.postValue(false)
                 memberData.value = it
-            }else{
-                _isEmptyList.postValue(true)
+            } else {
+                isEmptyList.postValue(true)
             }
 
         }
